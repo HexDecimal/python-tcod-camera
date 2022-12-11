@@ -5,6 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "tcod-camera"
 authors = [{ name = "Kyle Benesch", email = "4b796c65+github@gmail.com" }]
+readme = "README.md"
 license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,6 +24,7 @@ name = "tcod.camera"
 
 [project.urls]
 Home = "https://github.com/HexDecimal"
+Changelog = "https://github.com/HexDecimal/python-tcod-camera/blob/main/CHANGELOG.md"
 Source = "https://github.com/HexDecimal/python-tcod-camera"
 
 [tool.black] # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
