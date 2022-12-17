@@ -5,13 +5,16 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import sys
 
-import tcod.camera
+sys.path.append("..")
+
+from tcod.camera import __version__  # noqa
 
 project = "tcod-camera"
 copyright = "2022, Kyle Benesch"
 author = "Kyle Benesch"
-release = tcod.camera.__version__
+release = __version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
