@@ -13,7 +13,8 @@
     "files.trimTrailingWhitespace": true,
     "cSpell.words": [
         "Benesch",
-        "libtcod"
+        "libtcod",
+        "tcod"
     ],
     "python.formatting.provider": "black",
     "editor.codeActionsOnSave": {

@@ -152,6 +152,16 @@ def get_chunked_slices(
         For the chunk at `chunk_index` it should be sliced with `chunk_slice` to match a screen sliced with
         `screen_slice`.
 
+    Example::
+
+        CHUNK_SIZE: tuple[int, int]
+        screen: NDarray  # Screen array.
+        chunks: dict[tuple[int, int], NDarray]  # Mapping of chunked arrays.
+        camera: tuple[int, int]
+        for screen_slice, chunk_ij, chunk_slice in tcod.camera.get_chunked_slices(screen.shape, CHUNK_SIZE, camera):
+            if chunk_ij in chunks:
+                screen[screen_slice] = chunks[chunk_ij][chunk_slice]
+
     >>> list(get_chunked_slices((10,10),(10,10),(0,0)))
     [((slice(0, 10, None), slice(0, 10, None)), (0, 0), (slice(0, 10, None), slice(0, 10, None)))]
     >>> list(get_chunked_slices((10,10),(10,10),(-5,-5)))
