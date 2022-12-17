@@ -1,7 +1,7 @@
 """Camera helper tools for 2D tile-based projects."""
 from __future__ import annotations
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 import itertools
 from typing import Any, Iterator, Optional, TypeVar
@@ -139,7 +139,18 @@ def _get_chunked_slices_1d(screen_width: int, chunk_size: int, camera_pos: int) 
 def get_chunked_slices(
     screen: tuple[int, ...], chunk_shape: tuple[int, ...], camera: tuple[int, ...]
 ) -> Iterator[tuple[tuple[slice, ...], tuple[int, ...], tuple[slice, ...]]]:
-    """Iterate over any map chunks covered by the screen.
+    """Iterate over map chunks covered by the screen.
+
+    Args:
+        screen: The shape of the screen.
+        chunk_shape: The shape of individual chunks.
+        camera: The camera position.
+
+    Yields:
+        ``(screen_slice, chunk_index, chunk_slice)``
+
+        For the chunk at `chunk_index` it should be sliced with `chunk_slice` to match a screen sliced with
+        `screen_slice`.
 
     >>> list(get_chunked_slices((10,10),(10,10),(0,0)))
     [((slice(0, 10, None), slice(0, 10, None)), (0, 0), (slice(0, 10, None), slice(0, 10, None)))]
