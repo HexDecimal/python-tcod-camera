@@ -202,7 +202,7 @@ def get_camera(
 
         This value is ready to be used in :any:`get_slices`, :any:`get_views`, or :any:`get_chunked_slices`.
     """
-    camera = center[0] - screen[0] + screen[0] // 2, center[1] - screen[1] + screen[1] // 2
+    camera = center[0] - screen[0] // 2, center[1] - screen[1] // 2
     if clamping is not None:
         world, justify = clamping
         camera = clamp_camera(screen, world, camera, justify)
