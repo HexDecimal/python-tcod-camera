@@ -41,6 +41,7 @@ intersphinx_mapping = {
     "https://docs.python.org/3/": None,
 }
 
+autodoc_typehints = "description"
 
 # Prevent type aliases from expanding
 autodoc_type_aliases = {

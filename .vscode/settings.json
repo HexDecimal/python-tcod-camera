@@ -12,7 +12,8 @@
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "cSpell.words": [
-        "Benesch"
+        "Benesch",
+        "libtcod"
     ],
     "python.formatting.provider": "black",
     "editor.codeActionsOnSave": {
