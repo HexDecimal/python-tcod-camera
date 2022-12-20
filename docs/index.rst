@@ -12,7 +12,7 @@ Welcome to tcod-camera's documentation!
 
    head
    api
-
+   glossary
 
 
 Indices and tables

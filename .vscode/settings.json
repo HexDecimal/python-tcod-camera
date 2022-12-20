@@ -13,8 +13,22 @@
     "files.trimTrailingWhitespace": true,
     "cSpell.words": [
         "Benesch",
+        "dtype",
+        "genindex",
+        "intersphinx",
+        "ivar",
         "libtcod",
-        "tcod"
+        "maxdepth",
+        "modindex",
+        "Numpad",
+        "PAGEDOWN",
+        "PAGEUP",
+        "quickstart",
+        "rtype",
+        "scancode",
+        "tcod",
+        "toctree",
+        "typehints"
     ],
     "python.formatting.provider": "black",
     "editor.codeActionsOnSave": {

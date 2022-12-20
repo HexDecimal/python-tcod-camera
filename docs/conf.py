@@ -39,6 +39,7 @@ html_static_path = ["_static"]
 
 intersphinx_mapping = {
     "https://docs.python.org/3/": None,
+    "https://python-tcod.readthedocs.io/en/latest/": None,
 }
 
 autodoc_typehints = "description"

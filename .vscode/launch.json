@@ -21,7 +21,7 @@
         {
             "name": "Documentation: Launch Chrome",
             "request": "launch",
-            "type": "pwa-chrome",
+            "type": "chrome",
             "url": "file://${workspaceFolder}/docs/_build/html/index.html",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "build documentation",
@@ -29,7 +29,7 @@
         {
             "name": "Documentation: Launch Edge",
             "request": "launch",
-            "type": "pwa-msedge",
+            "type": "msedge",
             "url": "file://${workspaceFolder}/docs/_build/html/index.html",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "build documentation",
