@@ -1,7 +1,7 @@
 """Camera helper tools for 2D tile-based projects."""
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import itertools
 from typing import Any, Iterator, Optional, TypeVar
@@ -23,8 +23,10 @@ def _get_slices_1d(screen_width: int, world_width: int, camera_pos: int) -> tupl
         world_width: The world width.
         camera_pos: The left-most position where the camera is anchored to the world.
     """
-    screen_left = max(0, -camera_pos)
-    world_left = max(0, camera_pos)
+    screen_left = max(0, -camera_pos)  # Screen moves right as camera moves into negatives.
+    world_left = max(0, camera_pos)  # World is clamped to zero as camera moves into negatives.
+    world_left = min(world_left, world_width)  # Handle camera far right out of bounds.
+    # Handle screen and world size variations, and all other out-of-bounds cases.
     screen_width = min(screen_width - screen_left, world_width - world_left)
     return slice(screen_left, screen_left + screen_width), slice(world_left, world_left + screen_width)
 
@@ -38,9 +40,9 @@ def get_slices(
     The `screen`, `world`, and `camera` tuples must be the same length.
 
     Args:
-        screen: The screen shape.
-        world: The world shape.
-        camera: The camera anchor position, where the camera is in the world.
+        screen: The :term:`screen` shape.
+        world: The :term:`world` shape.
+        camera: The :term:`camera` position.
 
     Returns:
         The (screen_slice, world_slice) slices which can be used to index arrays of the given shapes.
@@ -49,6 +51,7 @@ def get_slices(
         The slices will be narrower than the screen when the camera is partially out-of-bounds.
         The slices will be zero-width if the camera is entirely out-of-bounds.
     """
+    assert len(screen) == len(world) == len(camera)
     slices = (_get_slices_1d(screen_, world_, camera_) for screen_, world_, camera_ in zip(screen, world, camera))
     screen_slices, world_slices = zip(*slices)
     return tuple(screen_slices), tuple(world_slices)
@@ -61,9 +64,9 @@ def get_views(screen: _ScreenArray, world: _WorldArray, camera: tuple[int, ...])
     The `screen`, `world`, and `camera` tuples must be the same length.
 
     Args:
-        screen: The NumPy array for the screen.
-        world: The NumPy array for the world.
-        camera: The camera anchor position, where the camera exists in the world.
+        screen: The NumPy array for the :term:`screen`.
+        world: The NumPy array for the :term:`world`.
+        camera: The :term:`camera` position.
 
     Returns:
         The given arrays pre-sliced into (screen_view, world_view) views.
@@ -89,30 +92,35 @@ def _clamp_camera_1d(screen_width: int, world_width: int, camera_pos: int, justi
 
 
 def clamp_camera(
-    screen: tuple[int, int], world: tuple[int, int], camera: tuple[int, int], justify: tuple[float, float] = (0.5, 0.5)
-) -> tuple[int, int]:
+    screen: tuple[int, ...], world: tuple[int, ...], camera: tuple[int, ...], justify: float | tuple[float, ...] = 0.5
+) -> tuple[int, ...]:
     """Clamp the camera to the screen/world shapes.  Preventing the camera from leaving the world boundary.
 
     Args:
-        screen: The screen shape.
-        world: The world shape.
-        camera: The current camera position.
+        screen: The :term:`screen` shape.
+        world: The :term:`world` shape.
+        camera: The current :term:`camera` position.
         justify: The justification to use when the world is smaller than the screen.
-            Defaults to ``(0.5, 0.5)`` which will center the world when it is smaller than the screen.
+            Defaults to ``0.5`` which will center the world when it is smaller than the screen.
 
-            A value of ``(0, 0)`` will move a world smaller to the screen to inner corner.
-            ``(1, 1)`` would do the same but to the opposite corner.
+            A value of zero will move a world smaller to the screen to inner corner.
+            One would do the same but to the opposite corner.
+            You may also give a tuple with a value for each axis.
 
     Returns:
-        The new camera position clamped using the given shapes and justification rules.
+        The new :term:`camera` position clamped using the given shapes and justification rules.
 
         Like the other functions, this camera position still assumes that the screen offset is ``(0, 0)``.
         This means that no other code changes are necessary to add or remove this clamping effect.
         This also means that changing ``justify`` also requires no external changes.
     """
-    return (
-        _clamp_camera_1d(screen[0], world[0], camera[0], justify[0]),
-        _clamp_camera_1d(screen[1], world[1], camera[1], justify[1]),
+    assert len(screen) == len(world) == len(camera)
+    if not isinstance(justify, tuple):
+        justify = (justify,) * len(camera)
+    assert len(camera) == len(justify)
+    return tuple(
+        _clamp_camera_1d(screen_, world_, camera_, justify_)
+        for screen_, world_, camera_, justify_ in zip(screen, world, camera, justify)
     )
 
 
@@ -142,9 +150,9 @@ def get_chunked_slices(
     """Iterate over map chunks covered by the screen.
 
     Args:
-        screen: The shape of the screen.
+        screen: The shape of the :term:`screen`.
         chunk_shape: The shape of individual chunks.
-        camera: The camera position.
+        camera: The :term:`camera` position.
 
     Yields:
         ``(screen_slice, chunk_index, chunk_slice)``
@@ -167,6 +175,7 @@ def get_chunked_slices(
     >>> list(get_chunked_slices((10,10),(10,10),(-5,-5)))
     [((slice(0, 5, None), slice(0, 5, None)), (-1, -1), (slice(5, 10, None), slice(5, 10, None))), ((slice(0, 5, None), slice(5, 10, None)), (-1, 0), (slice(5, 10, None), slice(0, 5, None))), ((slice(5, 10, None), slice(0, 5, None)), (0, -1), (slice(0, 5, None), slice(5, 10, None))), ((slice(5, 10, None), slice(5, 10, None)), (0, 0), (slice(0, 5, None), slice(0, 5, None)))]
     """
+    assert len(screen) == len(chunk_shape) == len(camera)
     chunk_lines = (
         _get_chunked_slices_1d(screen_, chunk_, camera_)
         for screen_, chunk_, camera_ in zip(screen, chunk_shape, camera)
@@ -177,15 +186,15 @@ def get_chunked_slices(
 
 
 def get_camera(
-    screen: tuple[int, int],
-    center: tuple[int, int],
-    clamping: Optional[tuple[tuple[int, int], tuple[float, float]]] = None,
-) -> tuple[int, int]:
+    screen: tuple[int, ...],
+    center: tuple[int, ...],
+    clamping: Optional[tuple[tuple[int, ...], float | tuple[float, ...]]] = None,
+) -> tuple[int, ...]:
     """Return the translation position for the camera from the given center position, screen size, and clamping rule.
 
     Args:
-        screen: The 2D screen shape.
-        center: The world position which the camera is following.
+        screen: The :term:`screen` shape.
+        center: The :term:`world` position which the camera will center on.
         clamping: The clamping rules, this is ``(world, justify)`` as if provided to :any:`clamp_camera`.
             If clamping is `None` then this function only does the minimum of subtracting half the screen size to get
             the camera position.
@@ -195,14 +204,10 @@ def get_camera(
             or `(0, 0)` to place the world towards zero.  This would be the upper-left corner with libtcod.
 
     Returns:
-        The camera transform position.
-
-        You can convert any screen coordinate to a world coordinate by adding the camera position.
-        You can convert any world coordinate to a screen coordinate by subtracting the camera position.
-
-        This value is ready to be used in :any:`get_slices`, :any:`get_views`, or :any:`get_chunked_slices`.
+        The clamped :term:`camera` position.
     """
-    camera = center[0] - screen[0] // 2, center[1] - screen[1] // 2
+    assert len(screen) == len(center)
+    camera = tuple(center_ - screen_ // 2 for center_, screen_ in zip(center, screen))
     if clamping is not None:
         world, justify = clamping
         camera = clamp_camera(screen, world, camera, justify)

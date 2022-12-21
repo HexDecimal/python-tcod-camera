@@ -88,13 +88,10 @@ def main() -> None:
 
         camera_ij = tcod.camera.get_camera(console.rgb.shape, (player.y, player.x))
 
-        visible_chunks = []
-
         for screen_slice, chunk_id, chunk_slice in tcod.camera.get_chunked_slices(
             console.rgb.shape, CHUNK_SHAPE, camera_ij
         ):
             console.rgb[screen_slice] = chunks[chunk_id][chunk_slice]
-            visible_chunks.append(chunk_id)
 
         console_ch_fg = console.rgb[["ch", "fg"]]
         for thing in things:

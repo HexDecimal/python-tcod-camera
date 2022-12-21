@@ -11,6 +11,7 @@ Glossary
         This is the :term:`world` position which gets projected to zero on the :term:`screen`.
 
         Once you get the camera position via :any:`get_camera` or by manually placing it you can easily convert between screen coordinates and world coordinates by applying vector math.
+        This position is also used by :any:`get_slices`, :any:`get_views`, or :any:`get_chunked_slices`.
 
         Add the camera position to a screen position (such as a mouse tile position) to get the world position (such as where in the world itself the mouse is hovering over.)
         Subtract the camera position from a world position (such as a player object position) to get the screen position (such as where to draw the player on the screen.)
