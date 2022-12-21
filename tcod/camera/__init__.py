@@ -50,6 +50,25 @@ def get_slices(
         Arrays indexed with these slices will always result in the same shape.
         The slices will be narrower than the screen when the camera is partially out-of-bounds.
         The slices will be zero-width if the camera is entirely out-of-bounds.
+
+    Example::
+
+        console: tcod.console.Console  # Libtcod console, C order.
+        player_ij: tuple[int, int]  # Player (y, x) position.
+        world: NDArray[Any]  # Array created with `dtype=tcod.console.rgb_graphic`, C order.
+
+        console.clear()  # Clear the console in case any areas are not covered by tcod.camera.get_slices.
+
+        # Get the camera position centered on the player.
+        camera_ij = tcod.camera.get_camera(console.rgb.shape, player_ij)
+
+        # Get the screen/world slices at the camera position.
+        screen_slice, world_slice = tcod.camera.get_slices(console.rgb, world, camera_ij)
+        console.rgb[screen_slice] = world[world_slice]  # Render world graphics.
+
+        # Render the player.
+        player_screen_y, player_screen_x = player_ij[0] - camera_ij[0], player_ij[1] - camera_ij[1]
+        console.print(player_screen_x, player_screen_y, "@")
     """
     assert len(screen) == len(world) == len(camera)
     slices = (_get_slices_1d(screen_, world_, camera_) for screen_, world_, camera_ in zip(screen, world, camera))
