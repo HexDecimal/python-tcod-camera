@@ -13,6 +13,7 @@
     "files.trimTrailingWhitespace": true,
     "cSpell.words": [
         "Benesch",
+        "codecov",
         "dtype",
         "genindex",
         "intersphinx",

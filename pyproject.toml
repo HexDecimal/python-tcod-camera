@@ -56,5 +56,6 @@ strict_equality = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "--doctest-modules"
+required_plugins = "pytest-cov>=4.0.0"
+addopts = "--doctest-modules --cov=tcod"
 testpaths = ["tcod"]
