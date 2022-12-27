@@ -20,7 +20,7 @@ class Thing:
     fg: Tuple[int, int, int] = (255, 255, 255)
 
 
-FLOOR_GRAPHICS = np.array([ord(ch) for ch in " ,.'`"], dtype=np.int32)
+FLOOR_GRAPHICS = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
 
 
 MOVE_KEYS = {
@@ -51,6 +51,16 @@ MOVE_KEYS = {
     tcod.event.Scancode.U: (1, -1),
     tcod.event.Scancode.B: (-1, 1),
     tcod.event.Scancode.N: (1, 1),
+    # WASD/WAXD keys.
+    tcod.event.Scancode.Z: (-1, 1),
+    tcod.event.Scancode.X: (0, 1),
+    tcod.event.Scancode.C: (1, 1),
+    tcod.event.Scancode.A: (-1, 0),
+    tcod.event.Scancode.S: (0, 1),
+    tcod.event.Scancode.D: (1, 0),
+    tcod.event.Scancode.Q: (-1, -1),
+    tcod.event.Scancode.W: (0, -1),
+    tcod.event.Scancode.E: (1, -1),
 }
 MAP_WIDTH, MAP_HEIGHT = 50, 50
 
@@ -67,14 +77,22 @@ def main() -> None:
     ]
 
     world: NDArray[Any] = FLOOR_GRAPHICS[np.random.randint(FLOOR_GRAPHICS.size, size=(MAP_HEIGHT, MAP_WIDTH))]
-    clamp = False
+    clamp = False  # If True then the camera will be bound to the world edges.
+    cursor_screen_xy: None | tuple[int, int] = None  # Cursor position in screen space.
+    cursor_world_xy: None | tuple[int, int] = None  # Cursor position in world space.
+    offset_xy = (0, 0)  # Camera offset from the player position.
 
     while True:
         console = context.new_console(10, 10)
 
-        camera_ij = tcod.camera.get_camera(console.rgb.shape, (player.y, player.x))
+        camera_ij = tcod.camera.get_camera(console.rgb.shape, (player.y + offset_xy[1], player.x + offset_xy[0]))
         if clamp:
             camera_ij = tcod.camera.clamp_camera(console.rgb.shape, world.shape, camera_ij, (0.5, 0.5))
+
+        # Any movements of the camera have to be reflected in the cursor world position.
+        cursor_world_xy = None
+        if cursor_screen_xy:
+            cursor_world_xy = cursor_screen_xy[0] + camera_ij[1], cursor_screen_xy[1] + camera_ij[0]
 
         screen_view, world_view = tcod.camera.get_views(console.rgb, world, camera_ij)
         screen_view["ch"] = world_view
@@ -86,25 +104,48 @@ def main() -> None:
             y = thing.y - camera_ij[0]
             x = thing.x - camera_ij[1]
             if not (0 <= x < console.width and 0 <= y < console.height):
-                continue
+                continue  # Cull out-of-bounds objects.
             console_ch_fg[y, x] = thing.ch, thing.fg
 
-        console.print(0, 0, f"{clamp=} (press TAB to toggle)", fg=(255, 255, 255))
-        console.print(0, 1, f"Player pos: {player.x},{player.y}", fg=(255, 255, 255))
-        console.print(0, 2, f"Camera pos: {camera_ij[1]},{camera_ij[0]}", fg=(255, 255, 255))
+        console.print_box(
+            0,
+            0,
+            console.width,
+            0,
+            f"{clamp=} (press TAB to toggle)"
+            f"\nOffset pos: {offset_xy} (right click and drag to adjust)"
+            f"\nPlayer pos: {player.x, player.y}"
+            f"\nCamera pos: {camera_ij[1], camera_ij[0]}"
+            f"\nCursor screen pos: {cursor_screen_xy}"
+            f"\nCursor world pos: {cursor_world_xy}"
+            # Find world space objects under the cursor.
+            f"\nCursor objs: {[thing for thing in things if (thing.x, thing.y) == cursor_world_xy]}",
+            fg=(255, 255, 255),
+        )
+
+        # Highlight the tile under the mouse.
+        if cursor_screen_xy and 0 <= cursor_screen_xy[0] < console.width and 0 <= cursor_screen_xy[1] < console.height:
+            console.rgb[["fg", "bg"]][cursor_screen_xy[1], cursor_screen_xy[0]] = (0, 0, 0), (255, 255, 255)
 
         context.present(console, keep_aspect=True, integer_scaling=True)
 
         for event in tcod.event.wait():
+            context.convert_event(event)
             if isinstance(event, tcod.event.Quit):
                 raise SystemExit()
-            if isinstance(event, tcod.event.KeyDown):
+            elif isinstance(event, tcod.event.KeyDown):
                 if event.scancode in MOVE_KEYS:
                     dx, dy = MOVE_KEYS[event.scancode]
                     player.x += dx
                     player.y += dy
                 if event.sym == tcod.event.KeySym.TAB:
                     clamp = not clamp
+            elif isinstance(event, tcod.event.MouseMotion):
+                if event.state & tcod.event.BUTTON_RMASK:  # Move offset by tile motion.
+                    offset_xy = offset_xy[0] - event.tile_motion.x, offset_xy[1] - event.tile_motion.y
+                cursor_screen_xy = event.tile.x, event.tile.y  # Save screen cursor position.
+            elif isinstance(event, tcod.event.WindowEvent) and event.type == "WINDOWLEAVE":  # type: ignore[comparison-overlap]
+                cursor_screen_xy = cursor_world_xy = None  # Reset cursor when the mouse leaves the window.
 
 
 if __name__ == "__main__":

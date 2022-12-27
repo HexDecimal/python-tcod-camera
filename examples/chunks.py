@@ -20,7 +20,7 @@ class Thing:
     fg: Tuple[int, int, int] = (255, 255, 255)
 
 
-FLOOR_GRAPHICS = np.array([ord(ch) for ch in " ,.'`"], dtype=np.int32)
+FLOOR_GRAPHICS = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
 
 
 MOVE_KEYS = {
@@ -51,6 +51,16 @@ MOVE_KEYS = {
     tcod.event.Scancode.U: (1, -1),
     tcod.event.Scancode.B: (-1, 1),
     tcod.event.Scancode.N: (1, 1),
+    # WASD/WAXD keys.
+    tcod.event.Scancode.Z: (-1, 1),
+    tcod.event.Scancode.X: (0, 1),
+    tcod.event.Scancode.C: (1, 1),
+    tcod.event.Scancode.A: (-1, 0),
+    tcod.event.Scancode.S: (0, 1),
+    tcod.event.Scancode.D: (1, 0),
+    tcod.event.Scancode.Q: (-1, -1),
+    tcod.event.Scancode.W: (0, -1),
+    tcod.event.Scancode.E: (1, -1),
 }
 CHUNK_SHAPE = 12, 16  # Chunk (height, width)
 

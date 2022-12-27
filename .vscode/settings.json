@@ -25,11 +25,15 @@
         "PAGEDOWN",
         "PAGEUP",
         "quickstart",
+        "RMASK",
         "rtype",
         "scancode",
         "tcod",
         "toctree",
-        "typehints"
+        "typehints",
+        "WASD",
+        "WAXD",
+        "WINDOWLEAVE"
     ],
     "python.formatting.provider": "black",
     "editor.codeActionsOnSave": {
