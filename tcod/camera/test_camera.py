@@ -6,8 +6,8 @@ import tcod.camera
 
 
 def test_views() -> None:
-    screen = np.zeros((2, 3), dtype=np.int8)
-    world = np.arange(4 * 5, dtype=np.int8).reshape((4, 5))
+    screen = np.zeros((2, 3), dtype=int)
+    world = np.arange(4 * 5, dtype=int).reshape((4, 5))
 
     screen_view, world_view = tcod.camera.get_views(screen, world, (-1000, -1000))
     assert screen_view.shape == world_view.shape
