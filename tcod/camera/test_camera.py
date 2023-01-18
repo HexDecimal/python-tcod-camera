@@ -22,14 +22,11 @@ def test_views() -> None:
     assert screen_view.shape == world_view.shape
     assert world_view.tolist() == [[6, 7, 8], [11, 12, 13]]
 
-    for x in range(-10, 10):
-        screen_view, world_view = tcod.camera.get_views(screen, world, (x, x))
-        screen_view[:] = world_view[:]
-        assert screen_view.shape == world_view.shape, f"{x=} {screen_view=} {world_view=}"
-
-        screen_view, world_view = tcod.camera.get_views(screen, world, (x, 0))
-        screen_view[:] = world_view[:]
-        assert screen_view.shape == world_view.shape, f"{x=} {screen_view=} {world_view=}"
+    for i in range(-10, 10):
+        for j in range(-10, 10):
+            screen_view, world_view = tcod.camera.get_views(screen, world, (i, j))
+            screen_view[:] = world_view[:]
+            assert screen_view.shape == world_view.shape, f"{i=},{j=}, {screen_view=}, {world_view=}"
 
 
 def test_get_camera() -> None:
