@@ -12,6 +12,7 @@
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "cSpell.words": [
+        "arange",
         "Benesch",
         "codecov",
         "dtype",

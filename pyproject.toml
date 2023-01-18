@@ -8,7 +8,7 @@ authors = [{ name = "Kyle Benesch", email = "4b796c65+github@gmail.com" }]
 readme = "README.md"
 license = { file = "LICENSE" }
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -33,7 +33,7 @@ test = [
 name = "tcod.camera"
 
 [project.urls]
-Home = "https://github.com/HexDecimal"
+Home = "https://github.com/HexDecimal/python-tcod-camera"
 Changelog = "https://github.com/HexDecimal/python-tcod-camera/blob/main/CHANGELOG.md"
 Documentation = "https://python-tcod-camera.readthedocs.io"
 Source = "https://github.com/HexDecimal/python-tcod-camera"

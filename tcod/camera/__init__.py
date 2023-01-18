@@ -1,7 +1,7 @@
 """Camera helper tools for 2D tile-based projects."""
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "1.0.0"
 
 import itertools
 from typing import Any, Iterator, Optional, TypeVar
@@ -27,7 +27,7 @@ def _get_slices_1d(screen_width: int, world_width: int, camera_pos: int) -> tupl
     world_left = max(0, camera_pos)  # World is clamped to zero as camera moves into negatives.
     world_left = min(world_left, world_width)  # Handle camera far right out of bounds.
     # Handle screen and world size variations, and all other out-of-bounds cases.
-    screen_width = min(screen_width - screen_left, world_width - world_left)
+    screen_width = max(0, min(screen_width - screen_left, world_width - world_left))
     return slice(screen_left, screen_left + screen_width), slice(world_left, world_left + screen_width)
 
 
