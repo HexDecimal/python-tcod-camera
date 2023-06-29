@@ -1,26 +1,31 @@
-#!/sr/bin/env python
+#!/usr/bin/env python
+"""Example script for a camera on a single map."""
 from __future__ import annotations
 
 import random
-from typing import Any, Tuple
+from typing import Any
 
 import attrs
 import numpy as np
 from numpy.typing import NDArray
 
-import tcod
 import tcod.camera
+import tcod.console
+import tcod.context
+import tcod.event
 
 
 @attrs.define
 class Thing:
+    """A distinct object."""
+
     x: int
     y: int
     ch: int
-    fg: Tuple[int, int, int] = (255, 255, 255)
+    fg: tuple[int, int, int] = (255, 255, 255)
 
 
-FLOOR_GRAPHICS = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
+FLOOR_GRAPHICS: NDArray[np.int32] = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
 
 
 MOVE_KEYS = {
@@ -65,7 +70,8 @@ MOVE_KEYS = {
 MAP_WIDTH, MAP_HEIGHT = 50, 50
 
 
-def main() -> None:
+def main() -> None:  # noqa: C901, PLR0912
+    """Begin a demo where a player can control a character and the camera."""
     context = tcod.context.new()
     player = Thing(MAP_WIDTH // 2, MAP_HEIGHT // 2, ord("@"))
     things = [
@@ -133,7 +139,7 @@ def main() -> None:
             context.convert_event(event)
             if isinstance(event, tcod.event.Quit):
                 raise SystemExit()
-            elif isinstance(event, tcod.event.KeyDown):
+            if isinstance(event, tcod.event.KeyDown):
                 if event.scancode in MOVE_KEYS:
                     dx, dy = MOVE_KEYS[event.scancode]
                     player.x += dx

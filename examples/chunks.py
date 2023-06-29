@@ -1,4 +1,5 @@
-#!/sr/bin/env python
+#!/usr/bin/env python
+"""Example script for infinite-world chunked maps."""
 from __future__ import annotations
 
 import random
@@ -8,19 +9,23 @@ import attrs
 import numpy as np
 from numpy.typing import NDArray
 
-import tcod
 import tcod.camera
+import tcod.console
+import tcod.context
+import tcod.event
 
 
 @attrs.define
 class Thing:
+    """A distinct object."""
+
     x: int
     y: int
     ch: int
-    fg: Tuple[int, int, int] = (255, 255, 255)
+    fg: tuple[int, int, int] = (255, 255, 255)
 
 
-FLOOR_GRAPHICS = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
+FLOOR_GRAPHICS: NDArray[np.int32] = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)
 
 
 MOVE_KEYS = {
@@ -81,12 +86,14 @@ def new_chunk(i: int, j: int) -> NDArray[Any]:
 class ChunkedWorld(DefaultDict[Tuple[int, ...], NDArray[Any]]):
     """A collection of chunks, chunks are generated on demand as they are indexed."""
 
-    def __missing__(self, __key: Tuple[int, ...]) -> NDArray[Any]:
+    def __missing__(self, __key: tuple[int, ...]) -> NDArray[Any]:
+        """Generate chunks on-demand."""
         self[__key] = value = new_chunk(*__key)
         return value
 
 
 def main() -> None:
+    """Begin a demo where the player can explore an infinite world."""
     context = tcod.context.new()
     player = Thing(CHUNK_SHAPE[1] // 2, CHUNK_SHAPE[0] // 2, ord("@"))
     things = [player]
@@ -119,11 +126,10 @@ def main() -> None:
         for event in tcod.event.wait():
             if isinstance(event, tcod.event.Quit):
                 raise SystemExit()
-            if isinstance(event, tcod.event.KeyDown):
-                if event.scancode in MOVE_KEYS:
-                    dx, dy = MOVE_KEYS[event.scancode]
-                    player.x += dx
-                    player.y += dy
+            if isinstance(event, tcod.event.KeyDown) and event.scancode in MOVE_KEYS:
+                dx, dy = MOVE_KEYS[event.scancode]
+                player.x += dx
+                player.y += dy
 
 
 if __name__ == "__main__":

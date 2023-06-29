@@ -1,13 +1,17 @@
+"""Tests for tcod.camera."""
 from __future__ import annotations
 
 import numpy as np
+from numpy.typing import NDArray
 
 import tcod.camera
 
+# ruff: noqa: D103
+
 
 def test_views() -> None:
-    screen = np.zeros((2, 3), dtype=int)
-    world = np.arange(4 * 5, dtype=int).reshape((4, 5))
+    screen: NDArray[np.int32] = np.zeros((2, 3), dtype=np.int32)
+    world: NDArray[np.int32] = np.arange(4 * 5, dtype=np.int32).reshape((4, 5))
 
     screen_view, world_view = tcod.camera.get_views(screen, world, (-1000, -1000))
     assert screen_view.shape == world_view.shape

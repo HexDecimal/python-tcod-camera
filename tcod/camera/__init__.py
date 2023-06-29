@@ -3,13 +3,13 @@ from __future__ import annotations
 
 __version__ = "1.0.0"
 
+import contextlib
 import itertools
-from typing import Any, Iterator, Optional, TypeVar
+from typing import Any, Iterator, TypeVar
 
-try:
+with contextlib.suppress(ImportError):
     from numpy.typing import NDArray
-except ImportError:
-    pass
+
 
 _ScreenArray = TypeVar("_ScreenArray", bound="NDArray[Any]")
 _WorldArray = TypeVar("_WorldArray", bound="NDArray[Any]")
@@ -207,7 +207,7 @@ def get_chunked_slices(
 def get_camera(
     screen: tuple[int, ...],
     center: tuple[int, ...],
-    clamping: Optional[tuple[tuple[int, ...], float | tuple[float, ...]]] = None,
+    clamping: tuple[tuple[int, ...], float | tuple[float, ...]] | None = None,
 ) -> tuple[int, ...]:
     """Return the translation position for the camera from the given center position, screen size, and clamping rule.
 
