@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Example script for infinite-world chunked maps."""
+
 from __future__ import annotations
 
 import random

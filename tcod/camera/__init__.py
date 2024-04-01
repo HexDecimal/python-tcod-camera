@@ -1,4 +1,5 @@
 """Camera helper tools for 2D tile-based projects."""
+
 from __future__ import annotations
 
 __version__ = "1.0.0"

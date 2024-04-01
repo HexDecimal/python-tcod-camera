@@ -8,7 +8,7 @@ import sys
 
 sys.path.append("..")
 
-from tcod.camera import __version__  # noqa
+from tcod.camera import __version__
 
 project = "tcod-camera"
 copyright = "2022, Kyle Benesch"
