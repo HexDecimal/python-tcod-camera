@@ -1,4 +1,5 @@
 """Tests for tcod.camera."""
+
 from __future__ import annotations
 
 import numpy as np

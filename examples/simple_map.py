@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Example script for a camera on a single map."""
+
 from __future__ import annotations
 
 import random
