@@ -5,7 +5,7 @@ from __future__ import annotations
 __version__ = "1.0.0"
 
 import itertools
-from typing import TYPE_CHECKING, Any, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, Iterator, TypeVar, overload
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -29,6 +29,22 @@ def _get_slices_1d(screen_width: int, world_width: int, camera_pos: int) -> tupl
     # Handle screen and world size variations, and all other out-of-bounds cases.
     screen_width = max(0, min(screen_width - screen_left, world_width - world_left))
     return slice(screen_left, screen_left + screen_width), slice(world_left, world_left + screen_width)
+
+
+@overload
+def get_slices(screen: tuple[int], world: tuple[int], camera: tuple[int]) -> tuple[tuple[slice], tuple[slice]]: ...
+@overload
+def get_slices(
+    screen: tuple[int, int], world: tuple[int, int], camera: tuple[int, int]
+) -> tuple[tuple[slice, slice], tuple[slice, slice]]: ...
+@overload
+def get_slices(
+    screen: tuple[int, int, int], world: tuple[int, int, int], camera: tuple[int, int, int]
+) -> tuple[tuple[slice, slice, slice], tuple[slice, slice, slice]]: ...
+@overload
+def get_slices(
+    screen: tuple[int, ...], world: tuple[int, ...], camera: tuple[int, ...]
+) -> tuple[tuple[slice, ...], tuple[slice, ...]]: ...
 
 
 def get_slices(
@@ -110,6 +126,27 @@ def _clamp_camera_1d(screen_width: int, world_width: int, camera_pos: int, justi
     return camera_pos
 
 
+@overload
+def clamp_camera(
+    screen: tuple[int], world: tuple[int], camera: tuple[int], justify: float | tuple[float] = 0.5
+) -> tuple[int]: ...
+@overload
+def clamp_camera(
+    screen: tuple[int, int], world: tuple[int, int], camera: tuple[int, int], justify: float | tuple[float, float] = 0.5
+) -> tuple[int, int]: ...
+@overload
+def clamp_camera(
+    screen: tuple[int, int, int],
+    world: tuple[int, int, int],
+    camera: tuple[int, int, int],
+    justify: float | tuple[float, float, float] = 0.5,
+) -> tuple[int, int, int]: ...
+@overload
+def clamp_camera(
+    screen: tuple[int, ...], world: tuple[int, ...], camera: tuple[int, ...], justify: float | tuple[float, ...] = 0.5
+) -> tuple[int, ...]: ...
+
+
 def clamp_camera(
     screen: tuple[int, ...], world: tuple[int, ...], camera: tuple[int, ...], justify: float | tuple[float, ...] = 0.5
 ) -> tuple[int, ...]:
@@ -163,6 +200,24 @@ def _get_chunked_slices_1d(screen_width: int, chunk_size: int, camera_pos: int) 
         segment_id += 1
 
 
+@overload
+def get_chunked_slices(
+    screen: tuple[int], chunk_shape: tuple[int], camera: tuple[int]
+) -> Iterator[tuple[tuple[slice], tuple[int], tuple[slice]]]: ...
+@overload
+def get_chunked_slices(
+    screen: tuple[int, int], chunk_shape: tuple[int, int], camera: tuple[int, int]
+) -> Iterator[tuple[tuple[slice, slice], tuple[int, int], tuple[slice, slice]]]: ...
+@overload
+def get_chunked_slices(
+    screen: tuple[int, int, int], chunk_shape: tuple[int, int, int], camera: tuple[int, int, int]
+) -> Iterator[tuple[tuple[slice, slice, slice], tuple[int, int, int], tuple[slice, slice, slice]]]: ...
+@overload
+def get_chunked_slices(
+    screen: tuple[int, ...], chunk_shape: tuple[int, ...], camera: tuple[int, ...]
+) -> Iterator[tuple[tuple[slice, ...], tuple[int, ...], tuple[slice, ...]]]: ...
+
+
 def get_chunked_slices(
     screen: tuple[int, ...], chunk_shape: tuple[int, ...], camera: tuple[int, ...]
 ) -> Iterator[tuple[tuple[slice, ...], tuple[int, ...], tuple[slice, ...]]]:
@@ -202,6 +257,32 @@ def get_chunked_slices(
     for c in itertools.product(*chunk_lines):
         out_screen, out_id, out_chunk = zip(*c)
         yield out_screen, out_id, out_chunk
+
+
+@overload
+def get_camera(
+    screen: tuple[int],
+    center: tuple[int],
+    clamping: tuple[tuple[int], float | tuple[float]] | None = None,
+) -> tuple[int]: ...
+@overload
+def get_camera(
+    screen: tuple[int, int],
+    center: tuple[int, int],
+    clamping: tuple[tuple[int, int], float | tuple[float, float]] | None = None,
+) -> tuple[int, int]: ...
+@overload
+def get_camera(
+    screen: tuple[int, int, int],
+    center: tuple[int, int, int],
+    clamping: tuple[tuple[int, int, int], float | tuple[float, float, float]] | None = None,
+) -> tuple[int, int, int]: ...
+@overload
+def get_camera(
+    screen: tuple[int, ...],
+    center: tuple[int, ...],
+    clamping: tuple[tuple[int, ...], float | tuple[float, ...]] | None = None,
+) -> tuple[int, ...]: ...
 
 
 def get_camera(

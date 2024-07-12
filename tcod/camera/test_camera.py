@@ -52,3 +52,11 @@ def test_get_camera() -> None:
     assert [-3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3] == [  # noqa: SIM300
         tcod.camera.get_camera((5,), (i,), ((2,), 1))[0] for i in range(-5, 10)
     ]
+
+
+def test_slices() -> None:
+    assert tcod.camera.get_slices((10, 10), (100, 100), (0, 10)) == (
+        (slice(0, 10), slice(0, 10)),
+        (slice(0, 10), slice(10, 20)),
+    )
+    _type_check: tuple[tuple[slice], tuple[slice]] = tcod.camera.get_slices((10,), (100,), (0,))
