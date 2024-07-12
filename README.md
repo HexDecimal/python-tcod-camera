@@ -9,6 +9,8 @@ This packages contains a set of tools for working with cameras which translate b
 
 It is intended to be used with [Python-tcod](https://github.com/libtcod/python-tcod) and [NumPy](https://numpy.org/) but requires neither.
 
+[Additional examples can be found here.](https://github.com/HexDecimal/python-tcod-camera/tree/main/examples)
+
 ```py
 # This library works with the idea that you have a world array you want projected onto a screen array.
 >>> import numpy as np
