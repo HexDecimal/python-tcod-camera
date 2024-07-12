@@ -4,11 +4,10 @@ from __future__ import annotations
 
 __version__ = "1.0.0"
 
-import contextlib
 import itertools
-from typing import Any, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
-with contextlib.suppress(ImportError):
+if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 

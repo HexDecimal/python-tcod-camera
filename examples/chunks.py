@@ -74,9 +74,9 @@ CHUNK_SHAPE = 12, 16  # Chunk (height, width)
 def new_chunk(i: int, j: int) -> NDArray[Any]:
     """Return a new map chunk, annotated with its position."""
     chunk = np.zeros(CHUNK_SHAPE, dtype=tcod.console.rgb_graphic)
-    chunk["ch"] = FLOOR_GRAPHICS[np.random.randint(FLOOR_GRAPHICS.size, size=CHUNK_SHAPE)]
+    chunk["ch"] = FLOOR_GRAPHICS[np.random.randint(FLOOR_GRAPHICS.size, size=CHUNK_SHAPE)]  # noqa: NPY002
     chunk["fg"] = 0x88, 0x88, 0x88
-    chunk["bg"] = random.randint(0, 0x40), random.randint(0, 0x40), random.randint(0, 0x40)
+    chunk["bg"] = random.randint(0, 0x40), random.randint(0, 0x40), random.randint(0, 0x40)  # noqa: S311
 
     string = [ord(c) for c in f"({j} {i}) "]
     str_size = min(len(string), chunk.shape[1])
@@ -126,7 +126,7 @@ def main() -> None:
 
         for event in tcod.event.wait():
             if isinstance(event, tcod.event.Quit):
-                raise SystemExit()
+                raise SystemExit
             if isinstance(event, tcod.event.KeyDown) and event.scancode in MOVE_KEYS:
                 dx, dy = MOVE_KEYS[event.scancode]
                 player.x += dx

@@ -8,7 +8,7 @@ from typing import Any
 
 import attrs
 import numpy as np
-from numpy.typing import NDArray
+from numpy.typing import NDArray  # noqa: TCH002
 
 import tcod.camera
 import tcod.console
@@ -77,13 +77,13 @@ def main() -> None:  # noqa: C901, PLR0912
     player = Thing(MAP_WIDTH // 2, MAP_HEIGHT // 2, ord("@"))
     things = [
         *(
-            Thing(random.randint(0, MAP_WIDTH - 1), random.randint(0, MAP_HEIGHT - 1), ord("%"), (255, 255, 0))
+            Thing(random.randint(0, MAP_WIDTH - 1), random.randint(0, MAP_HEIGHT - 1), ord("%"), (255, 255, 0))  # noqa: S311
             for _ in range(10)
         ),
         player,
     ]
 
-    world: NDArray[Any] = FLOOR_GRAPHICS[np.random.randint(FLOOR_GRAPHICS.size, size=(MAP_HEIGHT, MAP_WIDTH))]
+    world: NDArray[Any] = FLOOR_GRAPHICS[np.random.randint(FLOOR_GRAPHICS.size, size=(MAP_HEIGHT, MAP_WIDTH))]  # noqa: NPY002
     clamp = False  # If True then the camera will be bound to the world edges.
     cursor_screen_xy: None | tuple[int, int] = None  # Cursor position in screen space.
     cursor_world_xy: None | tuple[int, int] = None  # Cursor position in world space.
@@ -139,7 +139,7 @@ def main() -> None:  # noqa: C901, PLR0912
         for event in tcod.event.wait():
             context.convert_event(event)
             if isinstance(event, tcod.event.Quit):
-                raise SystemExit()
+                raise SystemExit
             if isinstance(event, tcod.event.KeyDown):
                 if event.scancode in MOVE_KEYS:
                     dx, dy = MOVE_KEYS[event.scancode]

@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
-from numpy.typing import NDArray
 
 import tcod.camera
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 # ruff: noqa: D103
 
@@ -39,12 +43,12 @@ def test_get_camera() -> None:
     assert tcod.camera.get_camera((3, 2), (5, 5), ((1, 1), 0)) == (0, 0)
     assert tcod.camera.get_camera((3, 2), (5, 5), ((1, 1), 1)) == (-2, -1)
 
-    assert [0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3] == [
+    assert [0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3] == [  # noqa: SIM300
         tcod.camera.get_camera((2,), (i,), ((5,), 0))[0] for i in range(-5, 10)
     ]
-    assert [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] == [
+    assert [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] == [  # noqa: SIM300
         tcod.camera.get_camera((5,), (i,), ((2,), 0))[0] for i in range(-5, 10)
     ]
-    assert [-3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3] == [
+    assert [-3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3] == [  # noqa: SIM300
         tcod.camera.get_camera((5,), (i,), ((2,), 1))[0] for i in range(-5, 10)
     ]

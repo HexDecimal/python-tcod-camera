@@ -1,12 +1,4 @@
 {
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": false,
-    "python.linting.mypyEnabled": true,
-    "python.linting.mypyArgs": [
-        "--follow-imports=silent",
-        "--show-column-numbers"
-    ],
     "editor.formatOnSave": true,
     "files.trimFinalNewlines": true,
     "files.insertFinalNewline": true,
@@ -41,7 +33,7 @@
         "WINDOWLEAVE"
     ],
     "editor.codeActionsOnSave": {
-        "source.fixAll": true
+        "source.fixAll": "always"
     },
     "editor.rulers": [
         120
