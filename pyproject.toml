@@ -72,8 +72,6 @@ line-length = 120
 [tool.ruff.lint] # https://docs.astral.sh/ruff/rules/
 select = ["ALL"]
 ignore = [
-    "ANN101", # missing-type-self
-    "ANN102", # missing-type-cls
     "COM",    # flake8-commas
     "E501",   # line-too-long
     "ISC001", # single-line-implicit-string-concatenation

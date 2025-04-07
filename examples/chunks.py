@@ -87,9 +87,9 @@ def new_chunk(i: int, j: int) -> NDArray[Any]:
 class ChunkedWorld(DefaultDict[Tuple[int, ...], NDArray[Any]]):
     """A collection of chunks, chunks are generated on demand as they are indexed."""
 
-    def __missing__(self, __key: tuple[int, ...]) -> NDArray[Any]:
+    def __missing__(self, key: tuple[int, ...], /) -> NDArray[Any]:
         """Generate chunks on-demand."""
-        self[__key] = value = new_chunk(*__key)
+        self[key] = value = new_chunk(*key)
         return value
 
 
