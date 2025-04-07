@@ -8,7 +8,7 @@ from typing import Any
 
 import attrs
 import numpy as np
-from numpy.typing import NDArray  # noqa: TCH002
+from numpy.typing import NDArray  # noqa: TC002
 
 import tcod.camera
 import tcod.console
