@@ -85,8 +85,8 @@ def main() -> None:  # noqa: C901, PLR0912
 
     world: NDArray[Any] = FLOOR_GRAPHICS[np.random.randint(FLOOR_GRAPHICS.size, size=(MAP_HEIGHT, MAP_WIDTH))]  # noqa: NPY002
     clamp = False  # If True then the camera will be bound to the world edges.
-    cursor_screen_xy: None | tuple[int, int] = None  # Cursor position in screen space.
-    cursor_world_xy: None | tuple[int, int] = None  # Cursor position in world space.
+    cursor_screen_xy: tuple[int, int] | None = None  # Cursor position in screen space.
+    cursor_world_xy: tuple[int, int] | None = None  # Cursor position in world space.
     offset_xy = (0, 0)  # Camera offset from the player position.
 
     while True:

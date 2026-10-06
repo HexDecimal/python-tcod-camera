@@ -72,6 +72,7 @@ line-length = 120
 [tool.ruff.lint] # https://docs.astral.sh/ruff/rules/
 select = ["ALL"]
 ignore = [
+    "CPY001", # missing-copyright-notice
     "COM",    # flake8-commas
     "E501",   # line-too-long
     "ISC001", # single-line-implicit-string-concatenation
